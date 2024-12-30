@@ -1,4 +1,11 @@
 
+
+NOTE: 
+1. must make ERD
+2. implement superAdmin
+3. vendor,customer and admin should be separated 
+
+
 // INFO: 
 => eslint and prettier settings
 1. npm install eslint prettier eslint-config-prettier eslint-plugin-prettier --save-dev
@@ -22,3 +29,8 @@ https://asgmt9-multi-vendor-e-commerce.netlify.app
 
 ## Github link client:
 https://github.com/aburaihan8715/asgmt9_multi_vendor_e_commerce_ui
+
+
+
+
+

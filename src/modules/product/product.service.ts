@@ -1,17 +1,44 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { Product } from './product.model';
 import { IProduct } from './product.interface';
 import { TFiles } from '../../interface/file.interface';
-import QueryBuilder from '../../builder/QueryBuilder';
 import { IShop } from '../shop/shop.interface';
 import { IUser } from '../user/user.interface';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { Shop } from '../shop/shop.model';
 
-const createProductIntoDB = async (files: TFiles, payload: IProduct) => {
+const createProductIntoDB = async (
+  vendorId: string,
+  files: TFiles,
+  payload: IProduct,
+) => {
   if (files && files.length > 0) {
     const images = files.map((file) => file.path);
     payload.images = images;
   }
+
+  // check shop exists
+  const shopOfCurrentVendor = await Shop.findOne({ vendor: vendorId });
+  if (!shopOfCurrentVendor) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Shop not found for current vendor!',
+    );
+  }
+
+  // check vendor id with shop id
+  const isMatchedVendorShop =
+    shopOfCurrentVendor._id.toString() === payload.shop.toString();
+
+  if (!isMatchedVendorShop) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'This is not your shop, you can create product only for your shop!',
+    );
+  }
+
   const result = await Product.create(payload);
 
   return result;
@@ -67,7 +94,19 @@ const updateProductIntoDB = async (
 };
 
 const getAllProductsFromDB = async (query: Record<string, unknown>) => {
-  const productQuery = new QueryBuilder(Product.find(), query)
+  const productQuery = new QueryBuilder(
+    Product.find()
+      .populate({
+        path: 'shop',
+      })
+      .populate({
+        path: 'category',
+      })
+      .populate({
+        path: 'vendor',
+      }),
+    query,
+  )
     .search(['name', 'description'])
     .filter()
     .sort()
@@ -77,10 +116,56 @@ const getAllProductsFromDB = async (query: Record<string, unknown>) => {
   const result = await productQuery.modelQuery;
   const meta = await productQuery.calculatePagination();
 
-  return {
-    meta,
-    result,
-  };
+  return { meta, result };
+};
+
+const getAllProductsByFollowedShopFromDB = async (
+  query: Record<string, unknown>,
+  customerId: string,
+) => {
+  const productQuery = new QueryBuilder(
+    Product.find()
+      .populate({ path: 'shop' })
+      .populate({ path: 'category' })
+      .populate({ path: 'vendor' }),
+    query,
+  )
+    .search(['name', 'description'])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await productQuery.modelQuery;
+  const meta = await productQuery.calculatePagination();
+
+  // priorities based on the followed shops
+  const followedShops = await Shop.find({
+    followers: { $in: customerId },
+  });
+  const followedShopIds = followedShops.map((item) => item._id);
+
+  if (followedShopIds.length > 0) {
+    const prioritizedResult = await Product.aggregate([
+      {
+        $match: {
+          _id: { $in: result.map((product: IProduct) => product._id) },
+        },
+      },
+      {
+        $addFields: {
+          isFollowedShop: {
+            $cond: [{ $in: ['$shop', followedShopIds] }, 1, 0],
+          },
+        },
+      },
+      { $sort: { isFollowedShop: -1 } },
+    ]);
+
+    return { meta, result: prioritizedResult };
+  }
+
+  return { meta, result };
 };
 
 const getSingleProductFromDB = async (id: string) => {
@@ -145,4 +230,5 @@ export const ProductService = {
   getAllProductsFromDB,
   getSingleProductFromDB,
   deleteProductFromDB,
+  getAllProductsByFollowedShopFromDB,
 };

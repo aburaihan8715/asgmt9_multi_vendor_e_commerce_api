@@ -76,10 +76,37 @@ const deleteShop = catchAsync(async (req, res) => {
   });
 });
 
+const followShop = catchAsync(async (req, res) => {
+  const currentUser = req.user;
+  const shopId = req.params.id;
+  await ShopService.followShop(currentUser, shopId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Follow success!',
+    data: null,
+  });
+});
+
+const unFollowShop = catchAsync(async (req, res) => {
+  const currentUser = req.user;
+  const shopId = req.params.id;
+  await ShopService.unFollowShop(currentUser, shopId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Un-follow success!',
+    data: null,
+  });
+});
 export const ShopController = {
   createShop,
   getAllShops,
   getSingleShop,
   updateShop,
   deleteShop,
+  unFollowShop,
+  followShop,
 };

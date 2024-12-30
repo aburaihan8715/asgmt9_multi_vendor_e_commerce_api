@@ -25,7 +25,10 @@ if (envConfig.NODE_ENV === 'development') {
 }
 app.use(
   cors({
-    origin: 'https://asgmt9-multi-vendor-e-commerce.netlify.app',
+    origin: [
+      'https://asgmt9-multi-vendor-e-commerce.netlify.app',
+      'http://localhost:5173',
+    ],
     credentials: true,
   }),
 );

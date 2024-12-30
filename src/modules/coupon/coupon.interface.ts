@@ -7,5 +7,6 @@ export interface ICoupon extends Document {
   validFrom: Date; // Start date for coupon validity
   validTo: Date; // End date for coupon validity
   isActive: boolean; // Coupon activation status
+  createdAt: Date;
   __v: number;
 }

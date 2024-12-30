@@ -8,9 +8,10 @@ export interface ICartItem {
 export interface ICart extends Document {
   _id: string;
   user: Types.ObjectId | string;
+  shop: Types.ObjectId | string;
   items: ICartItem[];
   totalItems?: number;
   totalAmount?: number;
-  isDeleted?: boolean;
+  createdAt: Date;
   __v: number;
 }

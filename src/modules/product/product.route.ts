@@ -11,19 +11,31 @@ const router = Router();
 router.post(
   '/',
   auth(USER_ROLE.vendor),
-  ProductsImagesUpload.array('files', 3),
+  ProductsImagesUpload.array('files', 2),
   parseBodyString(),
   ProductController.createProduct,
 );
 
+// GET NEW 5
+router.get(
+  '/featured-products',
+  ProductController.getFeaturedProducts,
+  ProductController.getAllProducts,
+);
+
 router.get('/', ProductController.getAllProducts);
+router.get(
+  '/all-by-follow-shop',
+  auth(USER_ROLE.customer),
+  ProductController.getAllProductsByFollowedShop,
+);
 
 router.get('/:id', ProductController.getSingleProduct);
 
 router.patch(
   '/:id',
   auth(USER_ROLE.vendor),
-  ProductsImagesUpload.array('files', 3),
+  ProductsImagesUpload.array('files', 2),
   parseBodyString(),
   ProductController.updateProduct,
 );

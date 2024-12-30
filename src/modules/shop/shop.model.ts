@@ -2,49 +2,47 @@
 import { Query, Schema, model } from 'mongoose';
 import { IShop } from './shop.interface';
 
-const shopSchema = new Schema<IShop>(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    logo: {
-      type: String,
-      default: '',
-    },
-
-    vendor: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-      unique: true,
-    },
-
-    followers: {
-      type: [Schema.Types.ObjectId],
-      ref: 'User',
-      default: [],
-    },
-
-    followersCount: {
-      type: Number,
-      default: 0,
-    },
-
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
+const shopSchema = new Schema<IShop>({
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  logo: {
+    type: String,
+    default: '',
   },
 
-  {
-    timestamps: true,
+  vendor: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    unique: true,
   },
-);
+
+  followers: {
+    type: [Schema.Types.ObjectId],
+    ref: 'User',
+    default: [],
+  },
+
+  followersCount: {
+    type: Number,
+    default: 0,
+  },
+
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+});
 
 //======== 01 DOCUMENT MIDDLEWARE PRE (save and find)=========
 

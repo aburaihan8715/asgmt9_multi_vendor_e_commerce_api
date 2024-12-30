@@ -11,48 +11,51 @@ const orderProductSchema = new Schema<IOrderProduct>(
       required: true,
     },
     quantity: { type: Number, required: true, min: 1 },
-    price: { type: Number, required: true, min: 0 },
   },
   { _id: false }, // Prevent _id creation for sub-documents
 );
 
-const orderSchema = new Schema<IOrder>(
-  {
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-    shop: {
-      type: Schema.Types.ObjectId,
-      ref: 'Shop',
-      required: true,
-    },
-    products: {
-      type: [orderProductSchema],
-      required: true,
-    },
-    totalAmount: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    status: {
-      type: String,
-      enum: ['PENDING', 'COMPLETED', 'CANCELED'],
-      default: 'PENDING',
-    },
-    payment: {
-      type: Schema.Types.ObjectId,
-      ref: 'Payment',
-      default: null,
-    },
+const orderSchema = new Schema<IOrder>({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
 
-  {
-    timestamps: true,
+  email: {
+    type: String,
+    required: true,
   },
-);
+
+  shop: {
+    type: Schema.Types.ObjectId,
+    ref: 'Shop',
+    required: true,
+  },
+  products: {
+    type: [orderProductSchema],
+    required: true,
+  },
+  totalAmount: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  status: {
+    type: String,
+    enum: ['PENDING', 'COMPLETED', 'CANCELED'],
+    default: 'PENDING',
+  },
+  transactionId: {
+    type: String,
+    required: true,
+  },
+
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+});
 
 //======== DOCUMENT MIDDLEWARE PRE (save and find)=========
 

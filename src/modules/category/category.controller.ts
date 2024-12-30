@@ -3,10 +3,14 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import sendNotFoundDataResponse from '../../utils/sendNotFoundDataResponse';
 import { CategoryService } from './category.service';
+import { IFile } from '../../interface/file.interface';
 
 // CREATE CATEGORY
 const createCategory = catchAsync(async (req, res) => {
-  const newCategory = await CategoryService.createCategoryIntoDB(req.body);
+  const newCategory = await CategoryService.createCategoryIntoDB(
+    req.file as IFile,
+    req.body,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,

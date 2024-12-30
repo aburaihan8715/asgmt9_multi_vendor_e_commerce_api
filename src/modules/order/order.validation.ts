@@ -12,7 +12,14 @@ const updateValidationSchema = z.object({
   }),
 });
 
+const createPaymentIntentValidation = z.object({
+  body: z.object({
+    price: z.number({ required_error: 'Price is required' }),
+  }),
+});
+
 export const OrderValidation = {
   createValidationSchema,
   updateValidationSchema,
+  createPaymentIntentValidation,
 };

@@ -9,12 +9,8 @@ import { USER_ROLE } from '../user/user.constant';
 
 const router = Router();
 
-router.post(
-  '/',
-  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
-  validateRequest(OrderValidation.createValidationSchema),
-  OrderController.createOrder,
-);
+//////////// Order Related /////////////////
+router.post('/', auth(USER_ROLE.customer), OrderController.addOrder);
 
 router.get('/', OrderController.getAllCategories);
 
@@ -31,6 +27,15 @@ router.delete(
   '/:id',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   OrderController.deleteOrder,
+);
+
+//////////// Payment Related /////////////////
+
+router.post(
+  '/create-payment-intent',
+  auth(USER_ROLE.customer),
+  validateRequest(OrderValidation.createPaymentIntentValidation),
+  OrderController.createPaymentIntent,
 );
 
 export const OrderRouter = router;

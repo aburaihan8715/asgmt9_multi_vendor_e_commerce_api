@@ -4,72 +4,71 @@ import bcrypt from 'bcrypt';
 import { IUser, IUserModel } from './user.interface';
 import envConfig from '../../config/env.config';
 
-const userSchema = new Schema<IUser>(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
+const userSchema = new Schema<IUser>({
+  name: {
+    type: String,
+    required: true,
+  },
 
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 
-    profilePhoto: {
-      type: String,
-      default: '',
-    },
+  profilePhoto: {
+    type: String,
+    default: '',
+  },
 
-    password: {
-      type: String,
-      required: true,
-      select: false,
-    },
+  password: {
+    type: String,
+    required: true,
+    select: false,
+  },
 
-    passwordConfirm: {
-      type: String,
-      required: true,
-      validate: {
-        // This only works on CREATE and SAVE!!!
-        validator: function (passwordConfirmValue): boolean {
-          return passwordConfirmValue === this.password;
-        },
-        message: 'Password are not the same!',
+  passwordConfirm: {
+    type: String,
+    required: true,
+    validate: {
+      // This only works on CREATE and SAVE!!!
+      validator: function (passwordConfirmValue): boolean {
+        return passwordConfirmValue === this.password;
       },
-    },
-
-    passwordChangedAt: {
-      type: Date,
-      default: null,
-    },
-
-    role: {
-      type: String,
-      enum: ['superAdmin', 'admin', 'customer', 'vendor'],
-      default: 'customer',
-    },
-
-    address: {
-      type: String,
-      default: '',
-    },
-    phone: {
-      type: String,
-      default: '',
-    },
-
-    isDeleted: {
-      type: Boolean,
-      default: false,
+      message: 'Password are not the same!',
     },
   },
 
-  {
-    timestamps: true,
+  passwordChangedAt: {
+    type: Date,
+    default: null,
   },
-);
+
+  role: {
+    type: String,
+    enum: ['superAdmin', 'admin', 'customer', 'vendor'],
+    default: 'customer',
+  },
+
+  address: {
+    type: String,
+    default: '',
+  },
+  phone: {
+    type: String,
+    default: '',
+  },
+
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+});
 
 //======== 01 DOCUMENT MIDDLEWARE PRE (save and find)=========
 userSchema.pre('save', async function (next) {

@@ -1,10 +1,13 @@
 import AppError from '../../errors/AppError';
+import Stripe from 'stripe';
 import httpStatus from 'http-status';
 import { IOrder } from './order.interface';
 import { Order } from './order.model';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 // CREATE Order
-const createOrderIntoDB = async (payload: IOrder) => {
+const addOrderIntoDB = async (payload: IOrder) => {
+  console.log('payload', payload);
   const result = await Order.create(payload);
   return result;
 };
@@ -59,10 +62,23 @@ const deleteOrderFromDB = async (id: string) => {
   return deletedOrder;
 };
 
+const createPaymentIntent = async (payload: { price: number }) => {
+  const amount = Math.trunc(payload.price * 100);
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: amount,
+    currency: 'usd',
+    payment_method_types: ['card'],
+  });
+
+  return { clientSecret: paymentIntent.client_secret };
+};
+
 export const OrderService = {
-  createOrderIntoDB,
+  addOrderIntoDB,
   updateOrderIntoDB,
   getAllCategoriesFromDB,
   getSingleOrderFromDB,
   deleteOrderFromDB,
+  createPaymentIntent,
 };

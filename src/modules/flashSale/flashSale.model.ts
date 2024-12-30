@@ -2,39 +2,38 @@
 import { Query, Schema, model } from 'mongoose';
 import { IFlashSale } from './flashSale.interface';
 
-const flashSaleSchema = new Schema<IFlashSale>(
-  {
-    products: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Product',
-        required: true,
-      },
-    ],
-    discountPercentage: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 100,
-    },
-    startTime: {
-      type: Date,
+const flashSaleSchema = new Schema<IFlashSale>({
+  products: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
       required: true,
     },
-    endTime: {
-      type: Date,
-      required: true,
-    },
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
+  ],
+  discountPercentage: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 100,
+  },
+  startTime: {
+    type: Date,
+    required: true,
+  },
+  endTime: {
+    type: Date,
+    required: true,
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
   },
 
-  {
-    timestamps: true,
+  createdAt: {
+    type: Date,
+    default: Date.now(),
   },
-);
+});
 
 //======== DOCUMENT MIDDLEWARE PRE (save and find)=========
 

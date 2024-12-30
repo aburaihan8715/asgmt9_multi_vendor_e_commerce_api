@@ -56,14 +56,10 @@ class QueryBuilder<T> {
   }
 
   paginate() {
-    const limit = this.query?.limit ? Number(this.query.limit) : null;
-
-    if (limit) {
-      const page = Number(this.query?.page) || 1;
-      const skip = (page - 1) * limit;
-      this.modelQuery = this.modelQuery.skip(skip).limit(limit);
-    }
-
+    const page = Number(this?.query?.page) || 1;
+    const limit = Number(this?.query?.limit) || 10;
+    const skip = (page - 1) * limit;
+    this.modelQuery = this.modelQuery.skip(skip).limit(limit);
     return this;
   }
 
@@ -81,9 +77,6 @@ class QueryBuilder<T> {
     const page = Number(this?.query?.page) || 1;
     const limit = Number(this?.query?.limit) || 10;
     const totalPage = Math.ceil(total / limit);
-
-    // const limit = this?.query?.limit ? Number(this.query.limit) : total;
-    // const totalPage = limit > 0 ? Math.ceil(total / limit) : 1;
 
     return {
       page,

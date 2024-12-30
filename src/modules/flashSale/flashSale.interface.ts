@@ -7,5 +7,6 @@ export interface IFlashSale extends Document {
   startTime: Date; // Start time of the flash sale
   endTime: Date; // End time of the flash sale
   isActive: boolean; // Whether the flash sale is active
+  createdAt: Date;
   __v: number;
 }

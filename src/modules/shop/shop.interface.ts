@@ -10,5 +10,6 @@ export interface IShop extends Document {
   followers: Types.ObjectId[] | IUser[];
   followersCount: number;
   isDeleted: boolean;
+  createdAt: Date;
   __v: number;
 }

@@ -27,6 +27,16 @@ router.patch(
   parseBodyString(),
   ShopController.updateShop,
 );
+router.patch(
+  '/:id/follow',
+  auth(USER_ROLE.customer),
+  ShopController.followShop,
+);
+router.patch(
+  '/:id/un-follow',
+  auth(USER_ROLE.customer),
+  ShopController.unFollowShop,
+);
 
 router.delete(
   '/:id',

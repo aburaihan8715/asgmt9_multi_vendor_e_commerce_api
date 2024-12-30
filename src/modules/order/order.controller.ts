@@ -5,8 +5,8 @@ import sendNotFoundDataResponse from '../../utils/sendNotFoundDataResponse';
 import { OrderService } from './order.service';
 
 // CREATE Order
-const createOrder = catchAsync(async (req, res) => {
-  const newOrder = await OrderService.createOrderIntoDB(req.body);
+const addOrder = catchAsync(async (req, res) => {
+  const newOrder = await OrderService.addOrderIntoDB(req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -71,10 +71,22 @@ const deleteOrder = catchAsync(async (req, res) => {
   });
 });
 
+//////////////// payment related ///////////////////
+const createPaymentIntent = catchAsync(async (req, res) => {
+  const result = await OrderService.createPaymentIntent(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Payment intent created successfully !',
+    data: result,
+  });
+});
 export const OrderController = {
-  createOrder,
+  addOrder,
   getAllCategories,
   getSingleOrder,
   updateOrder,
   deleteOrder,
+  createPaymentIntent,
 };

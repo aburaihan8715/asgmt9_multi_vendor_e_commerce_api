@@ -3,16 +3,16 @@ import { Router } from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import { UserValidation } from '../user/user.validation';
 import { UserController } from './user.controller';
-import multerUpload from '../../utils/fileUpload';
 import parseBodyString from '../../middlewares/parseBodyString';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
+import UserImageUpload from './user.utils';
 
 const router = Router();
 
 router.post(
   '/register',
-  multerUpload.single('file'),
+  UserImageUpload.single('file'),
   parseBodyString(),
   validateRequest(UserValidation.createValidationSchema),
   UserController.register,
@@ -26,7 +26,7 @@ router.patch(
     USER_ROLE.customer,
     USER_ROLE.vendor,
   ),
-  multerUpload.single('file'),
+  UserImageUpload.single('file'),
   parseBodyString(),
   validateRequest(UserValidation.updateProfileValidationSchema),
   UserController.updateProfile,

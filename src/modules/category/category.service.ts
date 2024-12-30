@@ -2,9 +2,13 @@ import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { ICategory } from './category.interface';
 import { Category } from './category.model';
+import { IFile } from '../../interface/file.interface';
 
 // CREATE CATEGORY
-const createCategoryIntoDB = async (payload: ICategory) => {
+const createCategoryIntoDB = async (file: IFile, payload: ICategory) => {
+  if (file && file.path) {
+    payload.image = file.path;
+  }
   const result = await Category.create(payload);
   return result;
 };

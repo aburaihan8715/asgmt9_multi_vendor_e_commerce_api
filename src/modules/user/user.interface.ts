@@ -14,6 +14,7 @@ export interface IUser extends Document {
   address?: string;
   phone?: string;
   isDeleted: boolean;
+  createdAt: Date;
   __v: number;
 }
 

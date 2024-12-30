@@ -2,23 +2,25 @@
 import { Query, Schema, model } from 'mongoose';
 import { ICategory } from './category.interface';
 
-const categorySchema = new Schema<ICategory>(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
+const categorySchema = new Schema<ICategory>({
+  name: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    default: '',
   },
 
-  {
-    timestamps: true,
+  isDeleted: {
+    type: Boolean,
+    default: false,
   },
-);
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+});
 
 //======== DOCUMENT MIDDLEWARE PRE (save and find)=========
 

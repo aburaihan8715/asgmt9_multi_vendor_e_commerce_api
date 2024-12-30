@@ -1,60 +1,61 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Query, Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { ICart } from './cart.interface';
 import { Product } from '../product/product.model';
 
-const cartSchema = new Schema<ICart>(
-  {
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-      unique: true,
-    },
-    items: [
-      {
-        product: {
-          type: Schema.Types.ObjectId,
-          ref: 'Product',
-          required: true,
-        },
-        quantity: {
-          type: Number,
-          required: true,
-          min: 1,
-          default: 1,
-        },
-        _id: false,
+const cartSchema = new Schema<ICart>({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    unique: true,
+  },
+
+  shop: {
+    type: Schema.Types.ObjectId,
+    ref: 'Shop',
+    required: true,
+    unique: true,
+  },
+
+  items: [
+    {
+      product: {
+        type: Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true,
       },
-    ],
-    totalItems: {
-      type: Number,
-      default: 0, // Default to 0
+      quantity: {
+        type: Number,
+        required: true,
+        min: 1,
+        default: 1,
+      },
+      _id: false,
     },
-    totalAmount: {
-      type: Number,
-      default: 0, // Default to 0
-    },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
+  ],
+  totalItems: {
+    type: Number,
+    default: 0, // Default to 0
+  },
+  totalAmount: {
+    type: Number,
+    default: 0, // Default to 0
   },
 
-  {
-    timestamps: true,
+  createdAt: {
+    type: Date,
+    default: Date.now(),
   },
-);
-
-//======== DOCUMENT MIDDLEWARE PRE (find)=========
-cartSchema.pre(/^find/, function (this: Query<any, ICart>, next) {
-  this.find({ isDeleted: { $ne: true } });
-  next();
 });
 
-//======== DOCUMENT MIDDLEWARE PRE (save)=========
+//======== DOCUMENT MIDDLEWARE PRE (find)=========
+// cartSchema.pre(/^find/, function (this: Query<any, ICart>, next) {
+//   this.find({ isDeleted: { $ne: true } });
+//   next();
+// });
 
+//======== DOCUMENT MIDDLEWARE PRE (save)=========
 cartSchema.pre('save', async function (next) {
   if (!this.isModified('items')) return next(); // Skip if `items` is not modified
 
