@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { Product } from './product.model';
@@ -51,7 +50,16 @@ const updateProductIntoDB = async (
   payload: Partial<IProduct>,
 ) => {
   // Check if Product exists
-  const product = await Product.findById(productId);
+  const product = await Product.findById(productId)
+    .populate({
+      path: 'shop',
+    })
+    .populate({
+      path: 'category',
+    })
+    .populate({
+      path: 'vendor',
+    });
 
   if (!product) {
     throw new AppError(httpStatus.NOT_FOUND, 'Product not found!');

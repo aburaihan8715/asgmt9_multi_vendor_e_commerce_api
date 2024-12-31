@@ -65,11 +65,6 @@ const productSchema = new Schema<IProduct>({
 // NOTE: select only necessary fields
 productSchema.pre(/^find/, function (this: Query<any, IProduct>, next) {
   this.find({ isDeleted: { $ne: true } });
-  // .populate({
-  //   path: 'shop',
-  //   populate: { path: 'vendor' },
-  // })
-  // .populate({ path: 'category' });
   next();
 });
 

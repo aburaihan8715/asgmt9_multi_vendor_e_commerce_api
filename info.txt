@@ -33,4 +33,34 @@ https://github.com/aburaihan8715/asgmt9_multi_vendor_e_commerce_ui
 
 
 
+//============need to be submitted ===========
+
+
+## Live link server:
+https://asgmt9-multi-vendor-e-commerce-api.vercel.app
+
+## Github link server:
+https://github.com/aburaihan8715/asgmt9_multi_vendor_e_commerce_api
+
+## Live link client:
+https://asgmt9-multi-vendor-e-commerce.netlify.app
+
+## Github link client:
+https://github.com/aburaihan8715/asgmt9_multi_vendor_e_commerce_ui
+
+## Admin credentials
+- email: aadmin@gmail.com
+- password: test1234
+
+## Vendor credentials
+- email: avendor@gmail.com
+- password: test1234
+
+## Customer credentials
+- email: acustomer@gmail.com
+- password: test1234
+
+
+
+
 
